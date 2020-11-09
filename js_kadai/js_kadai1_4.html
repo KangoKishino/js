@@ -1,0 +1,42 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <title>js_kadai1_4</title>
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+    <script>
+        let tasks = [
+            {
+                task: '机を片付ける',
+                genre: '掃除'
+            },{
+                task: '牛乳を買う',
+                genre: '買い物'
+            },{
+                task: '散歩する',
+                genre: '運動'
+            }
+        ];
+
+        const displayTask = () => {
+            console.log('=====================');
+            console.log('現在持っているタスク一覧');
+            console.log('=====================');
+            for (let i = 0; i < tasks.length; i++) {
+                console.log(i + '：[内容]' + tasks[i].task + '、[ジャンル]' + tasks[i].genre);
+            }
+        }
+        displayTask();
+        let input_task = prompt('タスクを入力してください');
+        let input_genre = prompt('ジャンルを入力してください');
+        alert('新しいタスクを追加しました。');
+        tasks.push({task: input_task, genre: input_genre});
+        displayTask();
+        let select = prompt('「確認,追加,削除,終了」の4つのいずれかを入力してください');
+    </script>
+</body>
+</html>
+
