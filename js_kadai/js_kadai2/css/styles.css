@@ -1,0 +1,17 @@
+
+.input-fizz,
+.input-buzz {
+  display: inline-block;
+}
+p.input-fizz,
+p.input-buzz {   
+  width: 80px;
+}
+
+input {   
+  width: 200px;
+}
+
+.clear {
+  clear: both;
+}
