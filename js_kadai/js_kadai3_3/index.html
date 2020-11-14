@@ -1,0 +1,32 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <title>TodoList</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+    <h1>ToDoリスト</h1>
+    <input type="radio" name="status" value="all" checked="checked">すべて
+    <input type="radio" name="status" value="running">作業中
+    <input type="radio" name="status" value="finish">完了
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>コメント</th>
+                <th colspan="2">状態</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+        </tbody>
+    </table>
+    <h2>新規タスクの追加</h2>
+        <input type="text" id="task">
+        <input type="submit" id="submit" value="追加">
+    <script src="js/main.js"></script>
+</body>
+</html>
+
