@@ -3,7 +3,8 @@
 const task = document.getElementById('task');
 const submit = document.getElementById('submit');
 const list = document.getElementById('list');
-let todos = [];
+const status = document.getElementsByName('status');
+const todos = [];
 
 const addTodo = () => {
     let item = {
@@ -14,51 +15,73 @@ const addTodo = () => {
     task.value = ''; 
 };
 
-const outputResult = () => {
+const processingResult = () => {
     list.innerHTML = '';
-    if (todos !== 'undefined') {
+    if (todos) {
         for (let i = 0; i < todos.length; i++) {
-
-            let newRow = list.insertRow();
-
-            let newCell = newRow.insertCell();
-            let newText = document.createTextNode(i);
-            newCell.appendChild(newText);
-
-            newCell = newRow.insertCell();
-            newText = document.createTextNode(todos[i].todo);
-            newCell.appendChild(newText);
-
-            newCell = newRow.insertCell();
-            newText = document.createElement('button');
-            todos[i].isDone === false ? newText.innerText = '作業中' : newText.innerText = '完了';
-            newCell.appendChild(newText);
-
-            newText.addEventListener('click', () => changeStatus(i));
-
-            newCell = newRow.insertCell();
-            newText = document.createElement('button');
-            newText.innerText = '削除';
-            newCell.appendChild(newText);
-
-            newText.addEventListener('click', () => removeTodo(newText, i));
+            if (status[0].checked) {
+                displayTodos(i);
+            } else if (status[1].checked) {
+                if (!todos[i].isDone){
+                    displayTodos(i);
+                }
+            } else {
+                if (todos[i].isDone){
+                    displayTodos(i);
+                }
+            }
         }
     }
 }
 
-const changeStatus = (i) => {
-    todos[i].isDone = !todos[i].isDone;
-    outputResult();
+const makeButton = (newRow, newCell, newText, index) => {
+    newCell = newRow.insertCell();
+    newText = document.createElement('button');
+    !todos[index].isDone ? newText.innerText = '作業中' : newText.innerText = '完了';
+    newCell.appendChild(newText);
+
+    newText.addEventListener('click', () => changeStatus(index));
+
+    newCell = newRow.insertCell();
+    newText = document.createElement('button');
+    newText.innerText = '削除';
+    newCell.appendChild(newText);
+
+    newText.addEventListener('click', () => removeTodo(newText, index));
+}
+
+const displayTodos = (index) => {
+    const newRow = list.insertRow();
+    let newCell = newRow.insertCell();
+    let newText = document.createTextNode(index);
+    newCell.appendChild(newText);
+
+    newCell = newRow.insertCell();
+    newText = document.createTextNode(todos[index].todo);
+    newCell.appendChild(newText);
+
+    makeButton(newRow, newCell, newText, index);
+}
+
+const changeStatus = (index) => {
+    todos[index].isDone = !todos[index].isDone;
+    processingResult();
 };
 
-const removeTodo = (newText, i) => {
+const removeTodo = (newText, index) => {
     const targetTask = newText.closest('tr');
     list.removeChild(targetTask);
-    todos.splice(i, 1);
-    outputResult();
+    todos.splice(index, 1);
+    processingResult();
 };
 
 submit.addEventListener('click', () => {
     addTodo();
-    outputResult();
+    processingResult();
+});
+
+status.forEach(function(e) {
+    e.addEventListener('click', function() {           
+        processingResult();
+    });
 });
