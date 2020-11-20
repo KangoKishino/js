@@ -1,6 +1,6 @@
 'use strict';
 
-const url = 'https://opentdb.com/api.php?amount=10&type=multiple';
+const url = 'https://opentdb.com/api.php?amount=10';
 const title = document.getElementById('title');
 const question = document.getElementById('question');
 const start = document.getElementById('start');
@@ -18,22 +18,20 @@ const runQuestion = () => {
             return res.json();
         })
         .then(data => {
-            setTimeout(() => {
-                new Create(data);
-            }, 3000)
+            new Quiz(data);
         })
         .catch(error => {
             console.error(error);
         });
 }
 
-class Create {
+class Quiz {
     constructor(data) {
         this.data = data;
-        this.answer_count = 0;
+        this.answerCount = 0;
         this.round = 0;
-        this.quiz_status = document.getElementById('quiz-status');
-        this.answer_button = document.getElementById('answer-button');
+        this.quizStatus = document.getElementById('quiz-status');
+        this.answerButton = document.getElementById('answer-button');
         this.createQuestion();
     }
 
@@ -43,11 +41,11 @@ class Create {
     }
 
     clearQuestion(){
-        while (this.quiz_status.firstChild) {
-            this.quiz_status.removeChild(this.quiz_status.firstChild);
+        while (this.quizStatus.firstChild) {
+            this.quizStatus.removeChild(this.quizStatus.firstChild);
         }
-        while (this.answer_button.firstChild) {
-            this.answer_button.removeChild(this.answer_button.firstChild);
+        while (this.answerButton.firstChild) {
+            this.answerButton.removeChild(this.answerButton.firstChild);
         }
     }
     
@@ -55,24 +53,24 @@ class Create {
         title.innerHTML = `問題${this.round + 1}`;
         const make_category = document.createElement('h3');
         make_category.textContent = `[ジャンル]${this.data.results[this.round].category}`;
-        this.quiz_status.appendChild(make_category);
+        this.quizStatus.appendChild(make_category);
         const make_difficulty = document.createElement('h3');
         make_difficulty.textContent = `[難易度]${this.data.results[this.round].difficulty}`;
-        this.quiz_status.appendChild(make_difficulty);
+        this.quizStatus.appendChild(make_difficulty);
         question.innerText = this.data.results[this.round].question;
         this.createAnswerList();
     }
 
     createAnswerList() {
-        let question_choice = '';
-        let question_choices = this.data.results[this.round].incorrect_answers;
-        question_choices.push(this.data.results[this.round].correct_answer);
-        for (let i = 0; i < 4; i++) {
-            question_choice = question_choices.splice(Math.floor(Math.random() * question_choices.length), 1)[0];
-            const make_button = document.createElement('button');
-            make_button.textContent = `${question_choice}`;
-            this.answer_button.appendChild(make_button);
-            make_button.addEventListener('click', (event) => {
+        let questionChoices = this.data.results[this.round].incorrect_answers;
+        questionChoices.push(this.data.results[this.round].correct_answer);
+        const questionNumber = questionChoices.length;
+        for (let i = 0; i < questionNumber; i++) {
+            const questionChoice = questionChoices.splice(Math.floor(Math.random() * questionChoices.length),1)[0];
+            const makeButton = document.createElement('button');
+            makeButton.textContent = questionChoice;
+            this.answerButton.appendChild(makeButton);
+            makeButton.addEventListener('click', (event) => {
                 this.judgeAnswer(event);
             });
         }
@@ -80,7 +78,7 @@ class Create {
 
     judgeAnswer(event) {
         if (this.data.results[this.round].correct_answer === event.target.textContent) {
-            this.answer_count++;
+            this.answerCount++;
         }
         this.round++;
         if (this.round < 10) {
@@ -92,15 +90,15 @@ class Create {
 
     outputFinalResult() {
         this.clearQuestion();
-        title.textContent = `あなたの正答数は${this.answer_count}です！！`;
+        title.textContent = `あなたの正答数は${this.answerCount}です！！`;
         question.textContent = '再度チャレンジしたい場合は以下をクリック！！';
-        const make_button = document.createElement('button');
-        make_button.textContent = 'ホームに戻る';
-        this.answer_button.appendChild(make_button);
-        make_button.addEventListener('click', () => {
+        const makeButton = document.createElement('button');
+        makeButton.textContent = 'ホームに戻る';
+        this.answerButton.appendChild(makeButton);
+        makeButton.addEventListener('click', () => {
             title.textContent = 'ようこそ';
             question.textContent = '以下のボタンをクリック';
-            make_button.style.display = 'none';
+            makeButton.style.display = 'none';
             start.style.display = 'block';
         });
     }
